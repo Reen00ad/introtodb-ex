@@ -1,0 +1,78 @@
+create database store;
+
+create table countries(
+    code int primary key ,
+    name varchar(20) unique ,
+    continent_name varchar(20) not null
+);
+
+select * from countries;
+
+
+create table users(
+    id int primary key ,
+    full_name varchar(20),
+    email varchar(20) unique ,
+    gender char check ( gender='f' or gender='m' ),
+    date_of_birth varchar(15),
+    createdat datetime,
+    countre_code int,
+    foreign key (countre_code) references countries(code)
+
+);
+select * from users;
+
+create table orders(
+    id int primary key ,
+    user_id int,
+    foreign key (user_id) references users(id),
+    status varchar(6) check ( status='start' or status='finish' ),
+    createdat datetime
+);
+
+select * from orders;
+
+create table products(
+    id int primary key ,
+    name varchar(10) not null ,
+    price int default 0,
+    status varchar(10) check ( status='valid' or status='expired' ),
+    craetedat datetime
+);
+
+select * from products;
+
+create table order_products(
+    order_id int,
+    foreign key (order_id) references orders(id),
+    product_id int,
+    foreign key (product_id) references products(id),
+    primary key (order_id , product_id),
+    quantity int default 0
+);
+
+select * from order_products;
+
+insert into countries values (1,'saudi','asia');
+insert into countries values (2,'japan','asia');
+
+
+insert into users values (1,'reenad','re@gmail.com','f','29-5-2000','2024-02-02 01:50:00',1);
+insert into users values (2,'lana','la@gmail.com','f','29-5-2020','2024-02-02 01:50:00',2);
+
+
+insert into orders values (1,1,'start','2024-02-02 01:52:00');
+insert into orders values (2,2,'start','2024-02-02 01:58:00');
+
+
+insert into products values (1,'book',50,'valid','2024-02-02 01:53:00');
+insert into products values (2,'bag',200,'valid','2024-02-02 01:57:00');
+
+
+insert into order_products values (1,1,3);
+insert into order_products values (2,2,8);
+
+
+update countries set name='qatar' where code=1;
+delete from order_products where product_id=1;
+delete from products where id=1;
